@@ -1,0 +1,306 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Crypto Electrosystem — Electronics product for industries, agriculture and home">
+  <defs>
+    <!-- Paper background -->
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#FFFCF7" />
+      <stop offset="50%"  stop-color="#F8F5EE" />
+      <stop offset="100%" stop-color="#EEEAE0" />
+    </linearGradient>
+
+    <!-- Diagonal stripe pattern -->
+    <pattern id="stripes" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="64" stroke="#E2DDD0" stroke-width="1" stroke-opacity="0.55" />
+    </pattern>
+
+    <!-- Amber gradient -->
+    <linearGradient id="amberRibbon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#F4A158" />
+      <stop offset="50%"  stop-color="#E87722" />
+      <stop offset="100%" stop-color="#C46018" />
+    </linearGradient>
+
+    <linearGradient id="amberSoft" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#F4A158" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#E87722" stop-opacity="0.5" />
+    </linearGradient>
+
+    <!-- Industrial scene gradient -->
+    <linearGradient id="industrialBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#2A2925" />
+      <stop offset="55%"  stop-color="#1C1917" />
+      <stop offset="100%" stop-color="#0C0A08" />
+    </linearGradient>
+
+    <!-- Agriculture sky/field -->
+    <linearGradient id="agSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#9DD2EE" />
+      <stop offset="55%"  stop-color="#CDE7E0" />
+      <stop offset="55%"  stop-color="#5E8A3D" />
+      <stop offset="80%"  stop-color="#3E6B2A" />
+      <stop offset="100%" stop-color="#2F5320" />
+    </linearGradient>
+
+    <!-- Home sky -->
+    <linearGradient id="homeSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#B7D8E8" />
+      <stop offset="60%"  stop-color="#E8EEF1" />
+      <stop offset="100%" stop-color="#D4DCDD" />
+    </linearGradient>
+
+    <!-- Circle clips -->
+    <clipPath id="clipIndustrial"><circle cx="0" cy="0" r="190" /></clipPath>
+    <clipPath id="clipAgriculture"><circle cx="0" cy="0" r="190" /></clipPath>
+    <clipPath id="clipHome"><circle cx="0" cy="0" r="190" /></clipPath>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="1080" fill="url(#paper)" />
+  <rect width="1920" height="1080" fill="url(#stripes)" opacity="0.6" />
+
+  <!-- Top ribbons -->
+  <g>
+    <path d="M0 0 L1920 0 L1920 90 C 1440 270, 880 240, 360 130 C 240 105, 110 90, 0 95 Z" fill="#0C0A08" />
+    <path d="M0 30 C 320 180, 760 220, 1240 150 C 1560 105, 1760 60, 1920 40 L 1920 0 L 0 0 Z" fill="url(#amberRibbon)" opacity="0.95" />
+  </g>
+
+  <!-- Bottom ribbons -->
+  <g>
+    <path d="M1920 1080 L0 1080 L0 990 C 480 810, 1040 840, 1560 950 C 1680 975, 1810 990, 1920 985 Z" fill="#0C0A08" />
+    <path d="M1920 1050 C 1600 900, 1160 860, 680 930 C 360 975, 160 1020, 0 1040 L 0 1080 L 1920 1080 Z" fill="url(#amberRibbon)" opacity="0.95" />
+  </g>
+
+  <!-- Decorative chevrons (left + right) -->
+  <g stroke="#E8DECC" stroke-width="2" fill="none" opacity="0.55">
+    <path d="M-40 540 L120 380" /><path d="M-40 580 L120 420" /><path d="M-40 620 L120 460" /><path d="M-40 660 L120 500" /><path d="M-40 700 L120 540" />
+    <path d="M1960 540 L1800 380" /><path d="M1960 580 L1800 420" /><path d="M1960 620 L1800 460" /><path d="M1960 660 L1800 500" /><path d="M1960 700 L1800 540" />
+  </g>
+
+  <!-- BRAND BLOCK (top center) -->
+  <g transform="translate(960 230)" text-anchor="middle">
+    <g font-family="'Bricolage Grotesque', serif" font-weight="700" letter-spacing="-3" fill="#1C1917">
+      <text font-size="120">
+        c<tspan fill="#E87722">r</tspan>ypto<tspan font-size="20" dy="-58" dx="6">®</tspan>
+      </text>
+    </g>
+    <text y="34" font-family="'Inter Tight', sans-serif" font-size="26" font-weight="500" fill="#E87722" letter-spacing="2">electrosystem</text>
+    <g transform="translate(0 76)">
+      <line x1="-180" y1="0" x2="-92" y2="0" stroke="#1C1917" stroke-width="1.2" />
+      <text font-family="'Inter Tight', sans-serif" font-size="16" fill="#1C1917" letter-spacing="6" font-weight="500">AN ISO 9001 — 2015 COMPANY</text>
+      <line x1="92" y1="0" x2="180" y2="0" stroke="#1C1917" stroke-width="1.2" />
+    </g>
+  </g>
+
+  <!-- THREE PRODUCT CIRCLES -->
+  <!-- Ring decorations -->
+  <g fill="none" stroke="url(#amberRibbon)" stroke-width="6">
+    <circle cx="760"  cy="600" r="196" />
+    <circle cx="960"  cy="580" r="196" />
+    <circle cx="1160" cy="600" r="196" />
+  </g>
+  <g fill="none" stroke="#FFFCF7" stroke-width="3">
+    <circle cx="760"  cy="600" r="194" />
+    <circle cx="960"  cy="580" r="194" />
+    <circle cx="1160" cy="600" r="194" />
+  </g>
+
+  <!-- INDUSTRIAL CIRCLE (left) -->
+  <g transform="translate(760 600)">
+    <g clip-path="url(#clipIndustrial)">
+      <rect x="-200" y="-200" width="400" height="400" fill="url(#industrialBg)" />
+      <!-- Cable bundles / wires backdrop -->
+      <g stroke="#4A3A2A" stroke-width="3" fill="none" opacity="0.7">
+        <path d="M-200 -160 C -120 -180, -40 -120, 60 -150 S 180 -100, 200 -130" />
+        <path d="M-200 -120 C -120 -140,   0 -80, 100 -110 S 180  -60, 200  -90" />
+        <path d="M-200  -80 C -120 -100,  20 -40, 120  -70 S 180  -20, 200  -50" />
+      </g>
+      <!-- Distribution panel grid -->
+      <g fill="#2A211A" stroke="#0C0A08" stroke-width="1.5">
+        <rect x="-160" y="-40" width="320" height="240" rx="6" />
+        <g fill="#4A3525" stroke="#0C0A08">
+          <rect x="-140" y="-20" width="100" height="36" rx="3" />
+          <rect x="-30"  y="-20" width="100" height="36" rx="3" />
+          <rect x="80"   y="-20" width="76" height="36" rx="3" />
+          <rect x="-140" y="30" width="100" height="36" rx="3" />
+          <rect x="-30"  y="30" width="100" height="36" rx="3" />
+          <rect x="80"   y="30" width="76" height="36" rx="3" />
+          <rect x="-140" y="80" width="100" height="36" rx="3" />
+          <rect x="-30"  y="80" width="100" height="36" rx="3" />
+          <rect x="80"   y="80" width="76" height="36" rx="3" />
+        </g>
+        <!-- LEDs/indicators -->
+        <g>
+          <circle cx="-110" cy="-2" r="3" fill="#E87722" />
+          <circle cx="-90"  cy="-2" r="3" fill="#22C55E" />
+          <circle cx="0"    cy="-2" r="3" fill="#E87722" />
+          <circle cx="20"   cy="-2" r="3" fill="#22C55E" />
+          <circle cx="110"  cy="-2" r="3" fill="#22C55E" />
+        </g>
+      </g>
+      <!-- Worker silhouette -->
+      <g fill="#1C1917">
+        <ellipse cx="-90" cy="-30" rx="34" ry="40" fill="#3A3530" />
+        <path d="M-130 50 L-130 -10 C -130 -36, -114 -56, -90 -56 C -66 -56, -50 -36, -50 -10 L-50 80 L -70 200 L -110 200 L -130 80 Z" fill="#2A4A6E" />
+        <!-- Arm reaching to panel -->
+        <path d="M-50 -10 C -20 -8, 0 0, 10 30 L -10 36 C -20 16, -34 10, -52 12 Z" fill="#2A4A6E" />
+        <!-- Hard hat -->
+        <path d="M-130 -50 C -130 -76, -100 -90, -90 -90 C -78 -90, -50 -76, -50 -50 Z" fill="#E87722" />
+        <rect x="-130" y="-52" width="80" height="6" fill="#C46018" />
+      </g>
+      <!-- Vignette -->
+      <radialGradient id="vIndustrial" cx="0.5" cy="0.5" r="0.7">
+        <stop offset="60%" stop-color="#000" stop-opacity="0" />
+        <stop offset="100%" stop-color="#000" stop-opacity="0.6" />
+      </radialGradient>
+      <circle r="200" fill="url(#vIndustrial)" />
+    </g>
+  </g>
+
+  <!-- AGRICULTURE CIRCLE (center, slightly elevated) -->
+  <g transform="translate(960 580)">
+    <g clip-path="url(#clipAgriculture)">
+      <rect x="-200" y="-200" width="400" height="400" fill="url(#agSky)" />
+      <!-- Sun -->
+      <circle cx="80" cy="-140" r="42" fill="#FFD89A" opacity="0.9" />
+      <circle cx="80" cy="-140" r="22" fill="#FFE7B8" />
+      <!-- Distant hills -->
+      <path d="M-200 30 C -120 -10, -40 -2, 40 18 S 180 14, 200 8 L 200 60 L -200 60 Z" fill="#7BAE4F" />
+      <!-- Field rows (perspective) -->
+      <g stroke="#3E6B2A" stroke-width="3" stroke-linecap="round" fill="none">
+        <path d="M-200 90 L -60 60" />
+        <path d="M-200 130 L -20 80" />
+        <path d="M-200 170 L 30 100" />
+        <path d="M40 60 L 200 90" />
+        <path d="M30 80 L 200 130" />
+        <path d="M20 100 L 200 170" />
+      </g>
+      <g fill="#6B9D3E">
+        <path d="M-200 60 L-180 200 L -200 200 Z" />
+        <path d="M200 60 L 180 200 L 200 200 Z" />
+        <rect x="-200" y="60" width="400" height="6" fill="#5E8A3D" />
+      </g>
+      <!-- Tractor -->
+      <g transform="translate(-10 20)">
+        <!-- Body -->
+        <rect x="-50" y="-30" width="80" height="38" rx="6" fill="#1F8C3E" />
+        <rect x="-55" y="-58" width="50" height="32" rx="4" fill="#1F8C3E" />
+        <rect x="-50" y="-54" width="40" height="24" rx="3" fill="#A8D6B2" />
+        <!-- Wheels -->
+        <circle cx="-32" cy="14" r="18" fill="#1C1917" />
+        <circle cx="-32" cy="14" r="8" fill="#5E5E5E" />
+        <circle cx="22"  cy="18" r="26" fill="#1C1917" />
+        <circle cx="22"  cy="18" r="12" fill="#5E5E5E" />
+        <!-- Exhaust -->
+        <rect x="-2" y="-72" width="6" height="18" fill="#2A2925" />
+        <!-- Headlight -->
+        <circle cx="30" cy="-18" r="4" fill="#FFE7B8" />
+      </g>
+      <!-- Foreground grass tufts -->
+      <g fill="#3E6B2A">
+        <path d="M-200 200 L -160 170 L -140 200 Z" />
+        <path d="M-100 200 L -60 168 L -30 200 Z" />
+        <path d="M40 200 L 80 170 L 110 200 Z" />
+        <path d="M140 200 L 180 168 L 200 200 Z" />
+      </g>
+    </g>
+  </g>
+
+  <!-- HOME CIRCLE (right) -->
+  <g transform="translate(1160 600)">
+    <g clip-path="url(#clipHome)">
+      <rect x="-200" y="-200" width="400" height="400" fill="url(#homeSky)" />
+      <!-- Distant tree line -->
+      <g fill="#9DB69A" opacity="0.7">
+        <circle cx="-150" cy="40" r="34" />
+        <circle cx="-110" cy="32" r="28" />
+        <circle cx="160" cy="48" r="40" />
+        <circle cx="120" cy="38" r="26" />
+      </g>
+      <!-- Ground -->
+      <rect x="-200" y="80" width="400" height="120" fill="#B8B0A0" />
+      <rect x="-200" y="80" width="400" height="6"  fill="#9D9583" />
+      <!-- Driveway -->
+      <path d="M-40 80 L 40 80 L 80 200 L -80 200 Z" fill="#7A7269" opacity="0.55" />
+      <!-- HOUSE -->
+      <g>
+        <!-- Main block -->
+        <rect x="-100" y="-30" width="180" height="120" fill="#F5F0E8" stroke="#1C1917" stroke-width="1.2" />
+        <!-- Dark second floor / cantilever -->
+        <rect x="-80" y="-90" width="120" height="60" fill="#2A2925" />
+        <!-- Roof line (flat modern) -->
+        <rect x="-110" y="-94" width="190" height="6" fill="#1C1917" />
+        <!-- Side wing -->
+        <rect x="60" y="-10" width="60" height="100" fill="#F5F0E8" stroke="#1C1917" stroke-width="1.2" />
+        <rect x="60" y="-14" width="60" height="6" fill="#1C1917" />
+        <!-- Windows -->
+        <g fill="#2A4A6E" stroke="#1C1917" stroke-width="0.8">
+          <rect x="-80" y="-78" width="46" height="34" />
+          <rect x="-22" y="-78" width="46" height="34" />
+          <rect x="-90" y="20" width="40" height="50" />
+          <rect x="-40" y="20" width="40" height="50" />
+          <rect x="20"  y="20" width="40" height="50" />
+          <rect x="68"  y="20" width="44" height="56" />
+        </g>
+        <!-- Door -->
+        <rect x="-12" y="38" width="22" height="52" fill="#1C1917" />
+        <rect x="-12" y="38" width="22" height="2" fill="#E87722" />
+        <!-- Balcony rails on second floor -->
+        <g stroke="#1C1917" stroke-width="1">
+          <line x1="-80" y1="-30" x2="-80" y2="-42" />
+          <line x1="-60" y1="-30" x2="-60" y2="-42" />
+          <line x1="-40" y1="-30" x2="-40" y2="-42" />
+          <line x1="-20" y1="-30" x2="-20" y2="-42" />
+          <line x1="0"   y1="-30" x2="0"   y2="-42" />
+          <line x1="20"  y1="-30" x2="20"  y2="-42" />
+          <line x1="-90" y1="-42" x2="40"  y2="-42" />
+        </g>
+        <!-- Warm interior glow -->
+        <rect x="68" y="20" width="44" height="56" fill="#F4A158" opacity="0.35" />
+      </g>
+      <!-- Foreground shrubs -->
+      <g fill="#6B9D3E">
+        <ellipse cx="-130" cy="92" rx="20" ry="10" />
+        <ellipse cx="140"  cy="96" rx="22" ry="10" />
+      </g>
+      <!-- Subtle vignette -->
+      <radialGradient id="vHome" cx="0.5" cy="0.5" r="0.75">
+        <stop offset="65%" stop-color="#000" stop-opacity="0" />
+        <stop offset="100%" stop-color="#000" stop-opacity="0.3" />
+      </radialGradient>
+      <circle r="200" fill="url(#vHome)" />
+    </g>
+  </g>
+
+  <!-- Circle labels -->
+  <g font-family="'JetBrains Mono', monospace" font-size="14" letter-spacing="3" fill="#1C1917" text-anchor="middle" font-weight="500">
+    <g transform="translate(760 836)">
+      <line x1="-44" y1="-12" x2="44" y2="-12" stroke="#E87722" stroke-width="1.5" />
+      <text>INDUSTRIAL</text>
+    </g>
+    <g transform="translate(960 836)">
+      <line x1="-52" y1="-12" x2="52" y2="-12" stroke="#E87722" stroke-width="1.5" />
+      <text>AGRICULTURE</text>
+    </g>
+    <g transform="translate(1160 836)">
+      <line x1="-32" y1="-12" x2="32" y2="-12" stroke="#E87722" stroke-width="1.5" />
+      <text>HOME</text>
+    </g>
+  </g>
+
+  <!-- BOTTOM TYPOGRAPHY -->
+  <!-- Left block: ELECTRONICS -->
+  <g transform="translate(120 980)">
+    <text font-family="'Bricolage Grotesque', serif" font-weight="800" font-size="84" letter-spacing="-3" fill="#E87722">ELECTRONICS</text>
+    <text y="40" font-family="'Inter Tight', sans-serif" font-size="22" font-weight="500" fill="#1C1917" letter-spacing="0.5">Product for Industries, Agriculture and Home</text>
+  </g>
+
+  <!-- Right block: Be safe and SECURE -->
+  <g transform="translate(1800 880)" text-anchor="end">
+    <text font-family="'Bricolage Grotesque', serif" font-weight="700" font-size="64" letter-spacing="-2" fill="#E87722">Be safe</text>
+    <text y="76"  font-family="'Bricolage Grotesque', serif" font-weight="500" font-size="56" letter-spacing="-1.5" fill="#1C1917">and</text>
+    <text y="152" font-family="'Bricolage Grotesque', serif" font-weight="800" font-size="76" letter-spacing="-2" fill="#E87722">SECURE</text>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:help.indiamart.com)",
+      "WebFetch(domain:seeklogo.com)",
+      "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --disable-gpu --hide-scrollbars --window-size=1440,1200 --virtual-time-budget=8000 --screenshot=/tmp/crypto-shots/h1200.png http://localhost:5173/)",
+      "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --disable-gpu --hide-scrollbars --window-size=1600,900 --virtual-time-budget=8000 --screenshot=/tmp/crypto-shots/w1600.png http://localhost:5173/)",
+      "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --disable-gpu --hide-scrollbars --window-size=1440,5400 --virtual-time-budget=10000 --screenshot=/tmp/crypto-shots/full5400.png http://localhost:5173/)",
+      "Bash(npm uninstall *)"
+    ]
+  }
+}

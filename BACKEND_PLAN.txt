@@ -1,0 +1,526 @@
+================================================================================
+ CRYPTO ELECTROSYSTEM — NESTJS BACKEND PLAN + FRONTEND REVIEW
+ Project: crypto-site (React 18 + Vite 5, static site)
+ Date: 2026-05-29
+================================================================================
+
+
+PART 1 — FRONTEND REVIEW
+--------------------------------------------------------------------------------
+
+Things working well
+- Clean single-page architecture; one IntersectionObserver in App.jsx drives
+  all scroll-reveal animations (good — no per-component observer bloat).
+- Design system lives entirely in CSS custom properties + one global stylesheet
+  (no Tailwind/CSS-in-JS overhead).
+- Component responsibilities are well-separated. ProductModal correctly locks
+  body scroll and closes on Escape / backdrop click.
+- Catalog viewer has solid UX: keyboard navigation, zoom, thumbnail sync.
+- Chatbot is intentionally offline (regex intents) — fast, no API cost.
+- App.jsx strips the URL hash + scrolls to top on refresh — nice touch.
+- Vite base: './' is correct for static-host subdirectory deploys.
+
+Issues / improvements (priority order)
+
+1. NO LEAD CAPTURE — biggest gap.
+   Contact.jsx only has mailto: links and phone numbers. For a B2B site this
+   leaks email addresses to scrapers AND loses every visitor who won't open
+   their mail client. You need a Contact form + Quote-request form posting
+   to a backend. This is the #1 reason to add NestJS.
+
+2. Hardcoded product data (src/data/products.js, ~1000+ lines).
+   Every catalog edit requires a developer + redeploy. Move to a database
+   the sales team can edit via an admin panel.
+
+3. react-router-dom is installed and BrowserRouter wraps <App/>, but there are
+   ZERO routes. Either remove the dependency, OR — recommended — use it for
+   /admin/* routes once you add the backend.
+
+4. SEO weak.
+   index.html likely has minimal <meta> tags. For a marketing site you want:
+     - <title>, <meta description>, Open Graph / Twitter Card tags
+     - JSON-LD structured data (Organization, Product schema)
+     - sitemap.xml + robots.txt
+     - Per-section h1/h2 hierarchy review
+   If SEO matters, consider migrating to Next.js (SSR) later — but for now,
+   static meta + structured data is enough.
+
+5. No analytics. You cannot answer "which products get viewed most?" or
+   "which CTA converts?" — add either a privacy-friendly analytics service
+   (Plausible/Umami) OR a /api/analytics/event endpoint in your new backend.
+
+6. No newsletter / mailing-list capture in the footer. Easy add once the
+   backend exists.
+
+7. Chatbot intents are hardcoded in Chatbot.jsx. Move the intent table to
+   the backend so sales can update FAQs without a deploy. Optionally, fall
+   back to an LLM (Claude/OpenAI) when no intent matches, instead of the
+   generic FALLBACK message.
+
+8. Image-heavy pages but no responsive <picture> / srcset, no WebP/AVIF.
+   The catalog page renders are .jpg only. Consider a backend image proxy
+   (or build-time optimization via vite-imagetools) to serve WebP.
+
+9. No error boundary anywhere. A render error in any component blanks the
+   page. Add a top-level <ErrorBoundary> in App.jsx.
+
+10. Inline styles sprinkled across components (style={{ marginBottom: 16 }}).
+    Minor — move to CSS classes for consistency.
+
+11. CatalogViewer uses document.querySelector('.viewer-thumb.active') —
+    works but is anti-React. Use a ref array or scroll-into-view via ref.
+
+12. The "reset-product-filter" CustomEvent works but is unusual. Lifting
+    filter state up to App or using a small Zustand/Context store would be
+    cleaner once the app grows.
+
+13. No code splitting — Chatbot (14 KB) and CatalogViewer load on first
+    paint even if user never scrolls. Use React.lazy() for below-the-fold
+    sections.
+
+14. Maps iframe is fine (no API key needed for embed mode).
+
+15. No tests, no linting, no formatter configured. Add ESLint + Prettier
+    when you set up the backend repo.
+
+
+--------------------------------------------------------------------------------
+PART 2 — NESTJS BACKEND PLAN
+--------------------------------------------------------------------------------
+
+2.1  RECOMMENDED STACK
+--------------------------------------------------------------------------------
+- NestJS 10 (TypeScript)
+- PostgreSQL 16 + Prisma (recommended over TypeORM for ergonomics)
+- class-validator + class-transformer  (DTO validation)
+- @nestjs/config                       (env management)
+- @nestjs/jwt + Passport               (admin auth)
+- @nestjs/throttler                    (rate-limit form submissions)
+- @nestjs-modules/mailer + Nodemailer  (transactional email)
+- @nestjs/swagger                      (auto API docs at /api/docs)
+- helmet + compression                 (security/perf middleware)
+- Multer + AWS S3 (or Cloudinary)      (image uploads)
+- bullmq + ioredis  (OPTIONAL — email queue, image processing)
+- @anthropic-ai/sdk  (OPTIONAL — LLM fallback for chatbot)
+- jest                                 (already bundled with Nest)
+
+Deployment target: Railway, Render, Fly.io, or a small VPS (DigitalOcean
+$6 droplet). Pair with a managed Postgres (Neon, Supabase, RDS).
+
+
+2.2  PROJECT LAYOUT
+--------------------------------------------------------------------------------
+crypto-backend/
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+├── src/
+│   ├── main.ts
+│   ├── app.module.ts
+│   ├── config/
+│   │   ├── configuration.ts
+│   │   └── validation.ts
+│   ├── common/
+│   │   ├── decorators/          (e.g. @Public, @CurrentUser)
+│   │   ├── filters/             (HttpExceptionFilter)
+│   │   ├── guards/              (JwtAuthGuard, RolesGuard)
+│   │   ├── interceptors/        (TransformInterceptor, LoggingInterceptor)
+│   │   └── pipes/               (ParseUuidPipe overrides)
+│   ├── prisma/                  (PrismaService + module)
+│   ├── auth/                    (login, JWT strategy, refresh tokens)
+│   ├── users/                   (admin user model)
+│   ├── products/                (CRUD + filtering + search)
+│   ├── categories/              (CRUD)
+│   ├── inquiries/               (contact / quote form intake)
+│   ├── newsletter/              (subscribe / unsubscribe)
+│   ├── clients/                 (government client logos)
+│   ├── certifications/          (cert badges)
+│   ├── chatbot/                 (intents + optional LLM)
+│   ├── analytics/               (event logging)
+│   ├── upload/                  (image upload → S3)
+│   └── mail/                    (transactional email service)
+├── test/
+├── .env
+├── .env.example
+└── package.json
+
+
+2.3  DATABASE SCHEMA (Prisma)
+--------------------------------------------------------------------------------
+model Category {
+  id        String   @id @default(uuid())
+  slug      String   @unique          // "single", "three", "two", "mobile", "panel"
+  label     String                    // "Single Phase"
+  order     Int      @default(0)
+  products  Product[]
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  slug         String   @unique       // "sp-ac-starter"
+  page         Int                    // source PDF page
+  category     Category @relation(fields: [categoryId], references: [id])
+  categoryId   String
+  catLabel     String
+  name         String
+  subtitle     String
+  summary      String
+  image        String                 // main image URL
+  gallery      Json                   // string[]
+  variants     Json                   // string[]
+  specs        Json                   // { key: value }
+  features     Json                   // string[]
+  applications Json                   // string[]
+  cutout       Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  inquiries    Inquiry[]
+}
+
+model Inquiry {
+  id         String        @id @default(uuid())
+  name       String
+  email      String
+  phone      String?
+  company    String?
+  product    Product?      @relation(fields: [productId], references: [id])
+  productId  String?
+  variant    String?
+  quantity   Int?
+  message    String
+  source     InquirySource @default(CONTACT_FORM)
+  status     InquiryStatus @default(NEW)
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime      @default(now())
+}
+
+enum InquirySource { CONTACT_FORM  QUOTE_FORM  CHATBOT  NEWSLETTER }
+enum InquiryStatus { NEW  CONTACTED  CLOSED  SPAM }
+
+model NewsletterSubscriber {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  isActive     Boolean  @default(true)
+  subscribedAt DateTime @default(now())
+  unsubscribedAt DateTime?
+}
+
+model Client {
+  id      String @id @default(uuid())
+  abbr    String
+  name    String
+  fullName String
+  sector  String
+  logoUrl String
+  order   Int    @default(0)
+  isActive Boolean @default(true)
+}
+
+model Certification {
+  id       String @id @default(uuid())
+  name     String
+  imageUrl String
+  order    Int    @default(0)
+  isActive Boolean @default(true)
+}
+
+model ChatbotIntent {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  patterns     Json     // string[] of regex sources
+  reply        String
+  quickReplies Json     // { label, query }[]
+  priority     Int      @default(0)
+  isActive     Boolean  @default(true)
+}
+
+model ChatbotMessage {
+  id            String   @id @default(uuid())
+  sessionId     String
+  role          ChatRole
+  text          String
+  matchedIntent String?
+  createdAt     DateTime @default(now())
+}
+
+enum ChatRole { USER  BOT }
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         AdminRole @default(EDITOR)
+  createdAt    DateTime @default(now())
+}
+
+enum AdminRole { ADMIN  EDITOR }
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  type       String              // 'page_view' | 'product_click' | 'cta_click' | ...
+  payload    Json
+  sessionId  String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+}
+
+
+2.4  API ENDPOINTS
+--------------------------------------------------------------------------------
+Public (consumed by the React frontend):
+  GET    /api/products?category=single&search=&page=1&limit=24
+  GET    /api/products/:slug
+  GET    /api/categories
+  GET    /api/clients
+  GET    /api/certifications
+  POST   /api/inquiries                  (rate-limited: 5/min/IP)
+  POST   /api/newsletter/subscribe       (rate-limited)
+  GET    /api/newsletter/unsubscribe/:token
+  POST   /api/chatbot/message            (rate-limited: 20/min/session)
+  POST   /api/analytics/event            (rate-limited: 60/min/IP)
+  GET    /api/health
+
+Admin (JWT-protected):
+  POST   /api/auth/login
+  POST   /api/auth/refresh
+  POST   /api/auth/logout
+  GET    /api/auth/me
+
+  POST   /api/products       PATCH /api/products/:id    DELETE /api/products/:id
+  POST   /api/categories     PATCH /api/categories/:id  DELETE /api/categories/:id
+  POST   /api/clients        PATCH /api/clients/:id     DELETE /api/clients/:id
+  POST   /api/certifications PATCH ...                  DELETE ...
+  POST   /api/chatbot/intents  PATCH ...                DELETE ...
+
+  GET    /api/inquiries?status=new&from=2026-05-01
+  PATCH  /api/inquiries/:id/status
+  GET    /api/inquiries/export.csv
+
+  GET    /api/newsletter/subscribers
+  GET    /api/analytics/dashboard
+
+  POST   /api/upload                     (multipart/form-data)
+
+Docs:
+  GET    /api/docs                       (Swagger UI in dev only)
+
+
+2.5  EXAMPLE — InquiriesController
+--------------------------------------------------------------------------------
+// src/inquiries/dto/create-inquiry.dto.ts
+export class CreateInquiryDto {
+  @IsString() @MaxLength(120)        name!: string;
+  @IsEmail()                          email!: string;
+  @IsOptional() @IsString()           phone?: string;
+  @IsOptional() @IsString()           company?: string;
+  @IsOptional() @IsUUID()             productId?: string;
+  @IsOptional() @IsString()           variant?: string;
+  @IsOptional() @IsInt() @Min(1)     quantity?: number;
+  @IsString() @MaxLength(2000)        message!: string;
+  @IsEnum(InquirySource)              source!: InquirySource;
+}
+
+// src/inquiries/inquiries.controller.ts
+@Controller('inquiries')
+export class InquiriesController {
+  constructor(private svc: InquiriesService) {}
+
+  @Public()
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @Post()
+  create(@Body() dto: CreateInquiryDto, @Req() req: Request) {
+    return this.svc.create(dto, req.ip, req.get('user-agent'));
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard) @Roles('ADMIN', 'EDITOR')
+  @Get()
+  list(@Query() q: ListInquiriesDto) { return this.svc.list(q); }
+}
+
+The service writes to Postgres AND sends an email via MailService to
+sales/purchase teams ("New inquiry from {name} — {productName}").
+
+
+2.6  SECURITY CHECKLIST
+--------------------------------------------------------------------------------
+- helmet() globally
+- CORS configured with only your frontend origin (no wildcard)
+- ValidationPipe with whitelist + forbidNonWhitelisted
+- @nestjs/throttler on every public POST (especially /inquiries, /chatbot)
+- bcrypt for admin password hashing (cost 12)
+- JWT with short access token (15 min) + refresh token (7 days, httpOnly cookie)
+- Hide /api/docs in production
+- Body-size limit (1 MB JSON, 5 MB multipart)
+- Honeypot field on the contact form (hidden input — bots fill it, humans don't)
+- Optional reCAPTCHA v3 / Cloudflare Turnstile on /inquiries
+- SQL injection: not a concern with Prisma parameterized queries
+- File upload: validate MIME, max size, scan filename, store under a UUID name
+- Never log PII (email/phone) to console in production
+- Add a robots.txt entry blocking /api/* from crawlers
+
+
+2.7  EMAIL FLOWS
+--------------------------------------------------------------------------------
+On /api/inquiries POST:
+  1. Save to DB
+  2. Send "New inquiry" email to salescryptoelectrosystem22@gmail.com
+     and purchasecryptoelectrosystem@gmail.com (if QUOTE_FORM)
+  3. Send auto-reply to the visitor ("We've received your message...")
+  4. Push to BullMQ if you want async delivery (recommended at scale)
+
+On /api/newsletter/subscribe:
+  1. Save with isActive=true
+  2. Send welcome email with unsubscribe link
+     (link contains a signed JWT token → /api/newsletter/unsubscribe/:token)
+
+Use a transactional service in production (SendGrid, Postmark, AWS SES) —
+NOT Gmail SMTP, which is rate-limited and triggers spam filters.
+
+
+2.8  CHATBOT UPGRADE (OPTIONAL)
+--------------------------------------------------------------------------------
+Keep the regex-intent layer as the fast path. On no match:
+  1. POST user message + last 5 turns of context to Claude/OpenAI
+  2. System prompt: "You are the Crypto Electrosystem assistant. Only answer
+     questions about industrial electrical products from this catalog: {...}.
+     If asked about anything else, politely redirect."
+  3. Return the LLM reply + suggested quick-replies
+  4. Log every conversation to chatbot_messages for review
+This way you keep latency low for common Q's and add intelligence for the
+long tail. Cost: ~$0.001 per Claude Haiku call.
+
+
+2.9  FRONTEND CHANGES NEEDED
+--------------------------------------------------------------------------------
+1. Add an .env file at the project root:
+     VITE_API_URL=http://localhost:3000/api    (dev)
+     VITE_API_URL=https://api.your-domain.com  (prod)
+
+2. Create src/lib/api.js — a fetch wrapper (or install axios):
+     export const api = (path, opts) =>
+       fetch(`${import.meta.env.VITE_API_URL}${path}`, {
+         credentials: 'include',
+         headers: { 'Content-Type': 'application/json', ...opts?.headers },
+         ...opts,
+       }).then((r) => { if (!r.ok) throw new Error(r.statusText); return r.json(); });
+
+3. Convert Products.jsx to fetch from /api/products on mount instead of
+   importing from src/data/products.js. Keep src/data/products.js around
+   ONLY for the initial DB seed (`npm run seed` in the backend).
+
+4. Add a <ContactForm/> component inside Contact.jsx posting to /api/inquiries.
+   Include a honeypot, loading state, success/error toast.
+
+5. Add a "Request a quote" button in ProductModal that opens a pre-filled
+   inquiry form (sets productId + variant).
+
+6. Add a newsletter input in the footer.
+
+7. Wire Chatbot.jsx to POST to /api/chatbot/message (with sessionId in
+   localStorage). Keep current local intents as a frontend fallback when
+   the backend is down.
+
+8. Add a /admin route group (use react-router-dom that's already installed):
+     /admin/login
+     /admin/products
+     /admin/inquiries
+     /admin/clients
+     /admin/certifications
+     /admin/chatbot
+     /admin/analytics
+   Protect with a route guard that checks /api/auth/me.
+
+9. Replace the IntersectionObserver scroll-reveal with the @react-hook/intersection-observer
+   helper, OR keep as-is — it's fine.
+
+10. Add @tanstack/react-query for caching, retries, and stale-while-revalidate
+    on product/category fetches (highly recommended).
+
+
+2.10  STAGED ROLLOUT PLAN
+--------------------------------------------------------------------------------
+Week 1 — Skeleton
+  - nest new crypto-backend
+  - Prisma + Postgres setup, schema + first migration
+  - Health endpoint, Swagger, Helmet, CORS, global ValidationPipe
+  - Dockerfile + docker-compose for local Postgres
+  - Seed script that imports src/data/products.js into the DB
+
+Week 2 — Public read APIs + Inquiries
+  - Products/Categories/Clients/Certifications GET endpoints
+  - Inquiries POST + email via Nodemailer
+  - Throttler + honeypot
+  - Migrate Products.jsx to fetch from backend
+  - Build Contact form on frontend
+
+Week 3 — Auth + Admin
+  - Auth module (JWT access + refresh)
+  - Admin write endpoints for all resources
+  - Minimal admin UI in React (product list, inquiry list, login)
+
+Week 4 — Polish
+  - File upload module (S3 or local)
+  - Newsletter
+  - Chatbot intent management + optional LLM fallback
+  - Analytics events
+  - Deploy backend (Railway), frontend (Netlify), point DNS
+
+Week 5+ — Optional
+  - BullMQ + Redis email queue
+  - CSV export for inquiries
+  - Server-side image optimization (sharp)
+  - SEO: meta tags, sitemap.xml, JSON-LD
+
+
+2.11  COMMANDS YOU'LL RUN
+--------------------------------------------------------------------------------
+# Bootstrap the backend (run OUTSIDE this folder)
+npm i -g @nestjs/cli
+nest new crypto-backend
+cd crypto-backend
+npm i @nestjs/config @nestjs/jwt @nestjs/passport @nestjs/throttler \
+      @nestjs/swagger @nestjs-modules/mailer \
+      class-validator class-transformer \
+      passport passport-jwt bcrypt \
+      helmet compression nodemailer
+npm i -D @types/bcrypt @types/passport-jwt @types/nodemailer
+npm i prisma -D
+npm i @prisma/client
+npx prisma init
+# (edit prisma/schema.prisma, then:)
+npx prisma migrate dev --name init
+npx prisma generate
+
+# Frontend tweaks (in this folder)
+npm i @tanstack/react-query        # data fetching
+# Optionally remove react-router-dom if you don't add /admin
+
+# Run both in dev:
+#   Terminal 1: cd crypto-backend && npm run start:dev    (port 3000)
+#   Terminal 2: cd crypto-site    && npm run dev          (port 5173)
+
+
+--------------------------------------------------------------------------------
+PART 3 — DECISIONS TO MAKE BEFORE CODING
+--------------------------------------------------------------------------------
+[ ] Is the admin panel built into the React app (/admin/*) or a separate
+    repo (e.g. crypto-admin with shadcn/ui)?  ← recommend: same repo
+[ ] Database host: Neon, Supabase, Railway PG, or self-hosted?
+[ ] Email service: SendGrid free tier (100/day) vs Postmark vs AWS SES?
+[ ] File storage: AWS S3 vs Cloudinary vs local disk (won't survive restarts)?
+[ ] Add Claude/OpenAI to chatbot, or stay rule-based?
+[ ] Multi-language (English + Hindi + Gujarati) now or later?
+[ ] Deploy backend to Railway/Render (easy) or a $6 DigitalOcean droplet
+    (cheaper at scale)?
+
+Pick the simplest option for each ("yes I'll use Railway, SendGrid, Cloudinary,
+single repo, rule-based chatbot") and you can be live in 2–3 weeks of focused
+work.
+
+================================================================================
+ END OF DOCUMENT
+================================================================================

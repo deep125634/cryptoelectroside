@@ -1079,6 +1079,53 @@ h1, h2, h3, h4 {
   .marquee-track span > * { padding: 0 18px; }
 }
 
+/* ── Restore auto-height for phones (≤720px overridden by the 880px rule above) ── */
+@media (max-width: 720px) {
+  .hero-banner-full { height: auto; min-height: 0; margin-bottom: 28px; }
+  .hero-banner-full::after { height: 60px; }
+}
+
+/* ── Small-phone refinements: iPhone 16 / 15 = 393 px CSS width ── */
+@media (max-width: 480px) {
+  .banner-stage {
+    padding: 68px 12px 56px;
+    gap: 14px;
+  }
+
+  /* Tighter circles so the whole banner fits without excessive height */
+  .banner-circle-img {
+    width: clamp(76px, 21vw, 98px);
+  }
+  .banner-circle--center .banner-circle-img {
+    width: clamp(96px, 27vw, 116px);
+    translate: 0 0;
+  }
+  .banner-circle--left  .banner-circle-img { translate:  8px 0; }
+  .banner-circle--right .banner-circle-img { translate: -8px 0; }
+
+  /* Pull figcaptions in to match smaller circles */
+  .banner-circle figcaption { font-size: 9px; letter-spacing: 0.18em; bottom: -34px; }
+  .banner-circle--center figcaption { bottom: -26px; }
+  .banner-circles { padding-bottom: 44px; }
+
+  /* Shorten ribbons so they don't eat too much vertical space */
+  .banner-ribbon { height: 58px; }
+
+  /* Scale down bottom text block */
+  .banner-electronics h2  { font-size: 13px; }
+  .banner-electronics p   { font-size: 9px; }
+  .banner-safe-line       { margin-bottom: 2px; }
+  .banner-safe-amber      { font-size: 12px; }
+  .banner-safe-and        { font-size: 10px; }
+  .banner-safe-secure     { font-size: 13px; }
+
+  /* Headline section below the banner */
+  .hero h1 { font-size: clamp(2.4rem, 10vw, 3.2rem); }
+  .hero-sub { font-size: 15px; }
+  .marquee-track span { font-size: 17px; }
+  .marquee-track span > * { padding: 0 14px; }
+}
+
 /* ============================================================
    ABOUT
    ============================================================ */

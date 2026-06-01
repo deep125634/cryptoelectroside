@@ -823,19 +823,26 @@ h1, h2, h3, h4 {
     position: static;
     inset: auto;
     width: 100%;
-    gap: 12px;
+    gap: 0;
+    padding-bottom: 52px;
   }
   .banner-circle-img {
-    width: clamp(74px, 23vw, 96px);
+    width: clamp(100px, 28vw, 120px);
   }
-  /* Reset the desktop overlap offsets so circles sit side by side */
+  /* Center circle: larger, no vertical offset — matches desktop hierarchy */
   .banner-circle--center .banner-circle-img {
-    width: clamp(86px, 27vw, 108px);
-    translate: 0 -10px;
+    width: clamp(120px, 34vw, 145px);
+    translate: 0 0;
   }
-  .banner-circle--left  .banner-circle-img,
-  .banner-circle--right .banner-circle-img { translate: 0 0; }
-  .banner-circle figcaption { display: none; }
+  /* Slight inward overlap, like desktop */
+  .banner-circle--left  .banner-circle-img { translate:  10px 0; }
+  .banner-circle--right .banner-circle-img { translate: -10px 0; }
+  .banner-circle figcaption {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    bottom: -38px;
+  }
+  .banner-circle--center figcaption { bottom: -30px; }
 
   /* Two columns: ELECTRONICS on the left, "Better/Selection/HIGH SUCCESS"
      on the right. */
@@ -851,7 +858,13 @@ h1, h2, h3, h4 {
     text-align: left;
   }
   .banner-electronics { text-align: left; }
+  .banner-electronics h2 { font-size: 16px; }
+  .banner-electronics p  { font-size: 10px; }
   .banner-safe { align-items: flex-end; }
+  .banner-safe-line   { margin-bottom: 4px; }
+  .banner-safe-amber  { font-size: 14px; }
+  .banner-safe-and    { font-size: 11px; }
+  .banner-safe-secure { font-size: 15px; }
 
   .banner-ribbon { height: 72px; }
 }

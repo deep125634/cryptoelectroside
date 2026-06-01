@@ -22,7 +22,8 @@ Single-page React 18 marketing website for Crypto Electrosystem (industrial elec
 **`App.jsx` responsibilities:**
 - On mount, disables native `scrollRestoration`, strips any URL hash via `history.replaceState`, and scrolls to top — so refreshing the page never jump-scrolls to a section.
 - Runs a single `IntersectionObserver` that toggles the `.in` class on every `.reveal` element when it enters the viewport (threshold 0.12). This drives all scroll-reveal animations across the site.
-- Renders sections in fixed order inside `<main>`: Hero → About → Products → CatalogViewer → Certifications → Clients → Contact. `<SocialDropdown />` and `<Chatbot />` are rendered as floating overlays *outside* `<main>`.
+- Renders sections in fixed order inside `<main>`: Hero → About → Products → CatalogViewer → Certifications → Clients → Contact. `<SocialDropdown />`, `<Chatbot />`, and `<ContactPopup />` are rendered as floating overlays *outside* `<main>`.
+- Manages `popupOpen` state: auto-opens `ContactPopup` after 5 s on first page visit (guarded by `sessionStorage.getItem('popupShown')`); also passes `openPopup` to `Navbar` for manual trigger.
 
 **Components** (`src/components/`):
 - `Navbar` — sticky nav with anchor links. Clicking the Products link dispatches a `reset-product-filter` custom event on `window` so the grid resets to "All".
@@ -36,6 +37,14 @@ Single-page React 18 marketing website for Crypto Electrosystem (industrial elec
 - `Contact` — footer with address, phones, emails
 - `SocialDropdown` — fixed-position floating action button (bottom-right) with hover/click-toggled social links
 - `Chatbot` — fixed-position floating chat panel. **Fully offline** — no API calls; matches user input against a curated `INTENTS` array of regex/keyword patterns and replies from canned responses with quick-reply chips. Closes on Escape, autofocuses on open.
+- `ContactPopup` — modal contact form powered by **EmailJS** (`@emailjs/browser`). Requires three `VITE_EMAILJS_*` env vars; degrades gracefully if absent (shows a "not configured" error rather than throwing). Closes on Escape or backdrop click; resets form state on re-open.
+
+**Environment variables** (create `.env.local` at the project root for local dev):
+```
+VITE_EMAILJS_SERVICE_ID=...
+VITE_EMAILJS_TEMPLATE_ID=...
+VITE_EMAILJS_PUBLIC_KEY=...
+```
 
 **Data:** `src/data/products.js` exports `categories` and `products` arrays. Each product has `id`, `category`, `catLabel`, `name`, `subtitle`, `page` (source PDF page #), `image` (path under `/images/products/`), optional `cutout` flag, optional `gallery` array (rendered as a collage when length > 1), `summary`, `variants`, `specs`, `features`, and `applications`. All product data is hardcoded here — there is no CMS.
 

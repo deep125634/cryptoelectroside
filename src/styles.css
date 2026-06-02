@@ -3262,12 +3262,27 @@ h1, h2, h3, h4 {
 
 @media (max-width: 880px) {
   .modal {
-    grid-template-columns: 1fr;
-    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: unset;
+    max-height: 82vh;
+    overflow: hidden;
   }
-  .modal-image { padding: 28px 18px; }
-  .modal-image img { max-height: 240px; }
-  .modal-content { padding: 28px 22px; max-height: none; }
+  .modal-image {
+    padding: 18px 16px 14px;
+    flex-shrink: 0;
+    gap: 12px;
+  }
+  .modal-image img { max-height: 170px; }
+  .modal-content {
+    padding: 20px 18px 24px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: none;
+  }
+  .modal-backdrop { padding: 16px; }
   .feature-list { grid-template-columns: 1fr; }
 }
 

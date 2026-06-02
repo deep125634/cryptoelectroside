@@ -35,7 +35,15 @@ export default function App() {
     if (window.location.hash) {
       window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
-    window.scrollTo(0, 0);
+    const resetScroll = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+    resetScroll();
+    // pageshow fires on refresh and back/forward navigation (covers iOS Safari)
+    window.addEventListener('pageshow', resetScroll);
+    return () => window.removeEventListener('pageshow', resetScroll);
   }, []);
 
   // Reveal-on-scroll observer

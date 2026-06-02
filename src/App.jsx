@@ -16,13 +16,13 @@ export default function App() {
   const openPopup  = useCallback(() => setPopupOpen(true),  []);
   const closePopup = useCallback(() => setPopupOpen(false), []);
 
-  // Auto-open popup after 5 s — only once per browser session
+  // Auto-open popup after 10 s — only once per browser session
   useEffect(() => {
     if (sessionStorage.getItem('popupShown')) return;
     const timer = setTimeout(() => {
       setPopupOpen(true);
       sessionStorage.setItem('popupShown', '1');
-    }, 5000);
+    }, 10000);
     return () => clearTimeout(timer);
   }, []);
 

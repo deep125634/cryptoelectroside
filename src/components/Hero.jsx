@@ -2,15 +2,16 @@ import React from 'react';
 
 export default function Hero() {
   const marqueeItems = [
-    'Motor Starters',
-    'Water Level Controllers',
-    'Auto Switches',
-    'Digital Timers',
-    'ELCB + MCB',
-    'Submersible Panels',
-    'Phase Changers',
-    'Mobile GSM Controllers',
-    'ISO 9001-2015',
+    { label: 'Motor Starters',            icon: '⚡' },
+    { label: 'Water Level Controllers',   icon: '💧' },
+    { label: 'Auto Switches',             icon: '🔄' },
+    { label: 'Digital Timers',            icon: '⏱' },
+    { label: 'ELCB + MCB',               icon: '🛡' },
+    { label: 'Submersible Panels',        icon: '🔩' },
+    { label: 'Phase Changers',            icon: '🔁' },
+    { label: 'Mobile GSM Controllers',    icon: '📶' },
+    { label: 'Digital Wall Mounting Meter', icon: '📊' },
+    { label: 'ELCB + MCB + RCCB',        icon: '⚡' },
   ];
 
   return (
@@ -154,16 +155,16 @@ export default function Hero() {
         {/* MARQUEE */}
         <div className="marquee fade-up delay-4" aria-hidden="true">
           <div className="marquee-track">
-            <span>
-              {marqueeItems.map((item, i) => (
-                <React.Fragment key={i}>{item}</React.Fragment>
-              ))}
-            </span>
-            <span>
-              {marqueeItems.map((item, i) => (
-                <React.Fragment key={i}>{item}</React.Fragment>
-              ))}
-            </span>
+            {[0, 1].map(copy => (
+              <span key={copy}>
+                {marqueeItems.map((item, i) => (
+                  <span className="marquee-item" key={i}>
+                    <span className="marquee-icon">{item.icon}</span>
+                    {item.label}
+                  </span>
+                ))}
+              </span>
+            ))}
           </div>
         </div>
       </div>

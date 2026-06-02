@@ -142,7 +142,7 @@ const INTENTS = [
     name: 'about',
     match: (t) => /\b(about|company|who|founder|history|story|when.*started|founded)\b/i.test(t),
     reply: () =>
-      "Crypto Electrosystem is an ISO 9001-2015 certified manufacturer of industrial electronic starters, controllers and protection systems. Founded in 2022 in Ahmedabad, Gujarat by Chirag Patel and Yagnik Patel. Our mission: micro-controller-driven engineering, certified quality, trusted across India.",
+      "Crypto Electrosystem is an ISO 9001-2015 certified manufacturer of industrial electronic starters, controllers and protection systems. Founded in 2022 in Ahmedabad, Gujarat by Chirag Kachhadiya and Yagnik Gondaliya. Our mission: micro-controller-driven engineering, certified quality, trusted across India.",
     quick: QUICK_REPLIES_DEFAULT,
   },
   {

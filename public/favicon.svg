@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Dark C-shape arc with round caps -->
+  <path
+    d="M 71.7 76 A 32 32 0 1 1 60 32.3"
+    fill="none"
+    stroke="#2E2B28"
+    stroke-width="19"
+    stroke-linecap="round"
+  />
+  <!-- Amber circle (top-right) -->
+  <circle cx="70" cy="22" r="18" fill="#C8882A"/>
+</svg>

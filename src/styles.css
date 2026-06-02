@@ -3954,7 +3954,14 @@ h1, h2, h3, h4 {
 }
 
 @media (max-width: 640px) {
-  .cpopup-card { padding: 28px 18px 24px; }
-  .cpopup-card .cf-row { grid-template-columns: 1fr; gap: 14px; }
+  .cpopup-overlay { padding: 12px; align-items: flex-end; }
+  .cpopup-card {
+    padding: 20px 16px 18px;
+    max-height: 75vh;
+    border-radius: 14px 14px 10px 10px;
+  }
+  .cpopup-card .cf-row { grid-template-columns: 1fr; gap: 10px; }
   .cpopup-card .cf-submit { width: 100%; justify-content: center; }
+  .cpopup-title { font-size: 1.15rem; }
+  .cpopup-sub { font-size: 12px; }
 }

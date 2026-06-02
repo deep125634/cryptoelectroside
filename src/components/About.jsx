@@ -21,7 +21,7 @@ export default function About() {
           <div className="about-copy reveal">
             <p>
               Founded on <strong>January 1, 2022</strong> by{' '}
-              <strong>Chirag Patel</strong> and <strong>Yagnik Patel</strong>,
+              <strong>Chirag Kachhadiya</strong> and <strong>Yagnik Gondaliya</strong>,
               Crypto Electro System is a leading provider of electronic
               starters, auto switches, water level controllers, submersible
               panels, digital timers, ELCB + MCB, monoblock starters and phase
@@ -66,7 +66,7 @@ export default function About() {
             <div className="founder-card">
               <div className="founder-avatar">CP</div>
               <div className="founder-info">
-                <h4>Chirag Patel</h4>
+                <h4>Chirag Kachhadiya</h4>
                 <small>CO-FOUNDER · CRYPTO ELECTROSYSTEM</small>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function About() {
             <div className="founder-card">
               <div className="founder-avatar">YP</div>
               <div className="founder-info">
-                <h4>Yagnik Patel</h4>
+                <h4>Yagnik Gondaliya</h4>
                 <small>CO-FOUNDER · CRYPTO ELECTROSYSTEM</small>
               </div>
             </div>

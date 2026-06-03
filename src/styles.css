@@ -3954,14 +3954,21 @@ h1, h2, h3, h4 {
 }
 
 @media (max-width: 640px) {
-  .cpopup-overlay { padding: 12px; align-items: flex-end; }
+  .cpopup-overlay { padding: 16px 12px; align-items: center; }
   .cpopup-card {
-    padding: 20px 16px 18px;
-    max-height: 75vh;
-    border-radius: 14px 14px 10px 10px;
+    padding: 14px 13px 13px;
+    border-radius: 14px;
+    max-height: none;
+    overflow-y: visible;
   }
-  .cpopup-card .cf-row { grid-template-columns: 1fr; gap: 10px; }
-  .cpopup-card .cf-submit { width: 100%; justify-content: center; }
-  .cpopup-title { font-size: 1.15rem; }
-  .cpopup-sub { font-size: 12px; }
+  .cpopup-card .cpopup-header { margin-bottom: 0; }
+  .cpopup-card .contact-form { gap: 8px; margin-top: 12px !important; }
+  .cpopup-card .cf-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cpopup-card .cf-field { gap: 2px; }
+  .cpopup-card .cf-field label { font-size: 9.5px; margin-bottom: 1px; }
+  .cpopup-card .cf-field input { padding: 7px 9px; font-size: 13px; }
+  .cpopup-card .cf-field textarea { min-height: 62px; padding: 7px 9px; font-size: 13px; resize: none; }
+  .cpopup-card .cf-submit { width: 100%; justify-content: center; padding: 9px 16px; font-size: 13px; }
+  .cpopup-title { font-size: 1.05rem; margin-bottom: 2px !important; }
+  .cpopup-sub { font-size: 11px; }
 }

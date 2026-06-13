@@ -828,6 +828,8 @@ h1, h2, h3, h4 {
   }
   .banner-circle-img {
     width: clamp(100px, 28vw, 120px);
+    border-width: 2px;
+    box-shadow: 0 0 0 2px var(--amber), 0 12px 28px rgba(28,25,23,0.32);
   }
   /* Center circle: larger, no vertical offset — matches desktop hierarchy */
   .banner-circle--center .banner-circle-img {
@@ -1139,6 +1141,8 @@ h1, h2, h3, h4 {
   /* Tighter circles so the whole banner fits without excessive height */
   .banner-circle-img {
     width: clamp(76px, 21vw, 98px);
+    border-width: 2px;
+    box-shadow: 0 0 0 2px var(--amber), 0 8px 20px rgba(28,25,23,0.28);
   }
   .banner-circle--center .banner-circle-img {
     width: clamp(96px, 27vw, 116px);
@@ -2397,8 +2401,76 @@ h1, h2, h3, h4 {
 }
 
 @media (max-width: 1024px) { .clients-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 720px)  { .clients-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px)  { .clients-grid { grid-template-columns: 1fr; } }
+
+/* ── Mobile carousel ── */
+.clients-carousel-controls { display: none; }
+
+@media (max-width: 720px) {
+  .clients-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 0;
+  }
+  .clients-grid::-webkit-scrollbar { display: none; }
+  .client-card {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+  .clients-carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 28px;
+  }
+}
+
+.clients-carousel-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--rule);
+  background: var(--cream);
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.clients-carousel-btn:hover:not(:disabled) {
+  border-color: var(--amber);
+  background: var(--paper-warm);
+}
+.clients-carousel-btn:disabled { opacity: 0.3; cursor: default; }
+
+.clients-carousel-dots {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 180px;
+}
+.clients-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  background: var(--rule);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.clients-dot.active {
+  background: var(--amber);
+  transform: scale(1.5);
+}
 
 /* ============================================================
    CONTACT (DARK FOOTER) — premium redesign

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 
 const departments = [
   {
@@ -94,7 +94,52 @@ const departments = [
   },
 ];
 
+const AUTOPLAY_INTERVAL = 2500;
+const AUTOPLAY_RESUME_DELAY = 4000;
+
 export default function Clients() {
+  const trackRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const total = departments.length;
+  const pausedRef = useRef(false);
+  const resumeTimerRef = useRef(null);
+
+  const scrollTo = useCallback((idx) => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.scrollTo({ left: idx * track.clientWidth, behavior: 'smooth' });
+    setActiveIdx(idx);
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const track = trackRef.current;
+    if (!track || track.clientWidth === 0) return;
+    const idx = Math.round(track.scrollLeft / track.clientWidth);
+    setActiveIdx(Math.max(0, Math.min(idx, total - 1)));
+  }, [total]);
+
+  const pauseAutoplay = useCallback(() => {
+    pausedRef.current = true;
+    clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      pausedRef.current = false;
+    }, AUTOPLAY_RESUME_DELAY);
+  }, []);
+
+  // Auto-play: advance every AUTOPLAY_INTERVAL ms, loop back to 0
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (pausedRef.current) return;
+      setActiveIdx((prev) => {
+        const next = (prev + 1) % total;
+        const track = trackRef.current;
+        if (track) track.scrollTo({ left: next * track.clientWidth, behavior: 'smooth' });
+        return next;
+      });
+    }, AUTOPLAY_INTERVAL);
+    return () => clearInterval(timer);
+  }, [total]);
+
   return (
     <section className="clients circuit-bg" id="clients">
       <div className="container">
@@ -109,7 +154,7 @@ export default function Clients() {
           </div>
         </div>
 
-        <div className="clients-grid">
+        <div className="clients-grid" ref={trackRef} onScroll={handleScroll} onTouchStart={pauseAutoplay}>
           {departments.map((dept) => (
             <div className="client-card reveal" key={dept.abbr}>
               <div className="client-logo-wrap">
@@ -133,6 +178,42 @@ export default function Clients() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Carousel controls — visible on mobile only via CSS */}
+        <div className="clients-carousel-controls">
+          <button
+            className="clients-carousel-btn"
+            onClick={() => { pauseAutoplay(); scrollTo(Math.max(0, activeIdx - 1)); }}
+            aria-label="Previous client"
+            disabled={activeIdx === 0}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+
+          <div className="clients-carousel-dots">
+            {departments.map((_, i) => (
+              <button
+                key={i}
+                className={`clients-dot${i === activeIdx ? ' active' : ''}`}
+                onClick={() => { pauseAutoplay(); scrollTo(i); }}
+                aria-label={`Go to client ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            className="clients-carousel-btn"
+            onClick={() => { pauseAutoplay(); scrollTo(Math.min(total - 1, activeIdx + 1)); }}
+            aria-label="Next client"
+            disabled={activeIdx === total - 1}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
         </div>
       </div>
     </section>
